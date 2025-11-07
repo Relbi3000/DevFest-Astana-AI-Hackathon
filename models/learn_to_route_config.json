@@ -1,0 +1,22 @@
+{
+  "feature_cols": [
+    "distance_km",
+    "base_time_h",
+    "base_cost",
+    "max_weight_kg",
+    "max_volume_m3",
+    "reliability",
+    "time_factor",
+    "cost_factor",
+    "weight_kg",
+    "volume_m3",
+    "cargo_class_express",
+    "cargo_class_fragile",
+    "cargo_class_refrigerated",
+    "cargo_class_standard",
+    "mode_air",
+    "mode_road",
+    "mode_transfer"
+  ],
+  "seed": 42
+}

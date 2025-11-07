@@ -1,0 +1,53 @@
+# OS/IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
+
+# Python bytecode/cache
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.tox/
+.cache/
+
+# Environments
+.env
+.env.*
+.venv/
+venv/
+env/
+
+# Build/dist
+build/
+dist/
+.eggs/
+*.egg-info/
+
+# Logs/temp files
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+tmp_*/
+
+# Coverage/reports
+.coverage
+.coverage.*
+coverage/
+htmlcov/
+
+# Node (if any)
+node_modules/
+
+# Project-specific
+ml/__pycache__/
+
+# Keep datasets and models tracked (do NOT ignore)
+!dataset/
+!models/

@@ -1,0 +1,27 @@
+{
+  "type": "feature_importances_",
+  "importance": {
+    "mean_actual_time_h": 26.0,
+    "mean_actual_cost": 57.0,
+    "mean_lateness_h": 78.0,
+    "delayed_share": 59.0,
+    "cancelled_share": 99.0,
+    "time_factor_mean": 80.0,
+    "cost_factor_mean": 59.0,
+    "dow": 106.0,
+    "month": 59.0,
+    "is_weekend": 0.0,
+    "day_of_year": 41.0,
+    "dow_sin": 17.0,
+    "dow_cos": 119.0,
+    "doy_sin": 0.0,
+    "doy_cos": 0.0,
+    "n_orders_lag_1": 84.0,
+    "n_orders_lag_7": 37.0,
+    "n_orders_lag_14": 17.0,
+    "n_orders_lag_28": 51.0,
+    "n_orders_ma_7": 59.0,
+    "n_orders_ma_14": 21.0,
+    "n_orders_ma_28": 59.0
+  }
+}

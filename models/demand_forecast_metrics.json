@@ -1,0 +1,17 @@
+{
+  "mape": 12.314385122092983,
+  "n_train": 72,
+  "n_test": 19,
+  "mape_boosted": 12.314385122092983,
+  "mape_transformer": 98.21173733453789,
+  "chosen_model": "boosted",
+  "backtest_mapes": [
+    19.749288797311575,
+    13.432266809257756,
+    9.314510440832652,
+    12.797621005570154
+  ],
+  "backtest_mape_mean": 13.823421763243033,
+  "backtest_mape_std": 3.7633579025682073,
+  "quantiles_available": true
+}
