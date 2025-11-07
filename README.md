@@ -1,56 +1,89 @@
-## AI GDG Hackathon Astana — Интеллектуальная оптимизация мультимодальной логистики
+# Edgerunners Logistics Optimizer
 
-Полная документация по проекту, реализованному в репозитории. Документация покрывает архитектуру решения, формат и семантику данных, модельные артефакты, сценарии запуска и рекомендации для разработчиков.
+End-to-end synthetic data generator, ML pipeline, and REST API for multimodal logistics routing.
 
-## Краткое содержание
+## Quick Start
 
-- Обзор проекта и цели
-- Как запустить конвейер (быстрый старт)
-- Структура репозитория
-- Где смотреть обученные модели и метрики
-- Ссылки на подробные разделы в `docs/`
+1. Create venv and install deps
 
-## Быстрый старт (PowerShell)
-
-1. Создайте виртуальное окружение и установите зависимости:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+```
+python bootstrap.py
+# PowerShell: .\.venv\Scripts\Activate
+# Linux/macOS: source .venv/bin/activate
 ```
 
-2. Запустите полный pipeline (генерация данных, обучение моделей, отчёты):
+2. Generate datasets and train models
 
-```powershell
+```
 python run_pipeline.py
 ```
 
-3. Посмотреть сводный отчёт по моделям:
+Artifacts are written to `datasets/` (CSV, graph) and `models/` (trained models, metrics).
 
-```powershell
-python tools\report_models.py
+3. Run API
+
+```
+python -m uvicorn app.main:app --reload
+# Open http://127.0.0.1:8000/docs
 ```
 
-## Структура репозитория (коротко)
+## API
 
-- `datagenerator2.0b.py` — генератор синтетических датасетов (nodes, edges, orders, weather, scenarios и матрицы)
-- `run_pipeline.py` — скрипт-оркестратор для последовательного запуска этапов конвейера
-- `ml/` — реализация всех ML-компонентов: эмбеддинги, GNN, L2R (learn-to-route), прогноз спроса, RL-роутинг, классификатор транспорта и утилиты
-- `models/` — обученные модели, конфиги и метрики
-- `dataset/` — сгенерированные CSV (nodes.csv, edges.csv, orders.csv, node_features.csv, node_embeddings.csv, weather.csv и т.д.)
-- `tools/report_models.py` — сводный отчёт по метрикам моделей
+- `GET /healthz` — liveness
+- `GET /metadata` — version and paths
+- `POST /optimize` — route recommendation
 
-## Подробная документация
+Example request:
 
-См. папку `docs/` для:
+```
+{
+  "shipment": {
+    "origin_id": "NODE_000",
+    "destination_id": "NODE_010",
+    "weight_kg": 1200,
+    "volume_m3": 12,
+    "cargo_class": "standard",
+    "required_delivery": "2024-01-05T12:00:00Z"
+  },
+  "preferences": {
+    "optimize_for": "balanced",
+    "max_budget": 120000,
+    "allow_multimodal": true,
+    "k_paths": 1,
+    "scenarios": 10
+  }
+}
+```
 
-- `architecture.md` — архитектура, взаимодействие компонентов
-- `data.md` — описание форматов CSV и ключевых столбцов
-- `models.md` — описание артефактов в `models/` и их значения
-- `how_to_run.md` — подробные инструкции по запуску и тренировке
-- `development.md` — советы по разработке и внесению изменений
-- `faq.md` — частые проблемы и их решения
+Responses include one route (segments, total cost/time, reliability), analytics (cost breakdown, risk factors), and risk-aware summary (expected time/cost and std) when `scenarios > 1`.
 
----
+Budget errors return 422 with JSON detail `{ code: "over_budget", cheapest, budget }`. If no path exists at all, `{ code: "no_path" }`.
+
+## Docker
+
+Build and run container:
+REPLACE "<project-reository-name>"
+```
+docker build -t <project-repository-name>:latest .
+docker run -d -p 8000:8000 <project-repository-name>
+```
+
+Open Swagger at http://localhost:8000/docs
+
+## Postman
+
+Import `postman/collection.json` into Postman. Set `baseUrl` to your host (default `http://localhost:8000`).
+
+## Project Structure
+
+- `datagenerator4.py` — synthetic data generation
+- `ml/` — ML pipeline: demand forecast, transport classifier, route optimizer, learn-to-route
+- `app/` — FastAPI service
+- `datasets/` — generated datasets (created by pipeline)
+- `models/` — trained models and metrics (created by pipeline)
+
+## Notes
+
+- The API warms up graph/models and caches route computations (LRU) for better latency.
+- Risk-aware routing uses simple scenario noise per segment (by mode). Extend as needed.
+

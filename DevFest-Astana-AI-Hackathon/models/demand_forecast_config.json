@@ -1,0 +1,48 @@
+{
+  "horizon": 1,
+  "feature_cols": [
+    "mean_actual_time_h",
+    "mean_actual_cost",
+    "mean_lateness_h",
+    "delayed_share",
+    "cancelled_share",
+    "time_factor_mean",
+    "cost_factor_mean",
+    "dow",
+    "month",
+    "is_weekend",
+    "day_of_year",
+    "dow_sin",
+    "dow_cos",
+    "doy_sin",
+    "doy_cos",
+    "n_orders_lag_1",
+    "n_orders_lag_7",
+    "n_orders_lag_14",
+    "n_orders_lag_28",
+    "n_orders_ma_7",
+    "n_orders_ma_14",
+    "n_orders_ma_28"
+  ],
+  "lags": [
+    1,
+    7,
+    14,
+    28
+  ],
+  "moving_averages": [
+    7,
+    14,
+    28
+  ],
+  "seasonal": [
+    "dow_sin",
+    "dow_cos",
+    "doy_sin",
+    "doy_cos"
+  ],
+  "seed": 42,
+  "model_type": "LGBMRegressor",
+  "transformer_available": true,
+  "best_model_type": "boosted"
+}

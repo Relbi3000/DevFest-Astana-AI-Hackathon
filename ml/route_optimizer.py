@@ -398,6 +398,8 @@ def optimize_delivery(
     mode_pref = cargo_specs.get("mode_pref", "balanced")
     created_at = cargo_specs.get("created_at")
     weather_df = load_weather()
+    # number of stochastic scenarios to simulate per-route (used by _path_stats)
+    scenarios = int(constraints.get("scenarios", 1))
 
     Gc = _capacity_filter(G, weight_kg, volume_m3)
     # RL route (influential by default)

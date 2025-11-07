@@ -1,0 +1,86 @@
+{
+  "info": {
+    "name": "ERV Optimize - Test Collection",
+    "_postman_id": "optimize-collection-001",
+    "description": "Collection to test /optimize endpoint (accepts 200 or 422; ensures no 500).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8000/healthz",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["healthz"]
+      }
+    }
+  },
+    {
+      "name": "Metadata",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8000/metadata",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["metadata"]
+          } 
+      }
+    },
+    {
+      "name": "Optimize - balanced sample",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"shipment\": {\n    \"origin_id\": \"NODE_000\",\n    \"destination_id\": \"NODE_010\",\n    \"weight_kg\": 1200,\n    \"volume_m3\": 12,\n    \"cargo_class\": \"standard\",\n    \"required_delivery\": \"2024-01-05T12:00:00Z\"\n  },\n  \"preferences\": {\n    \"optimize_for\": \"balanced\",\n    \"max_budget\": 120000,\n    \"allow_multimodal\": true,\n    \"k_paths\": 1,\n    \"scenarios\": 10\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/optimize",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "optimize"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status not 500\", function () {\n  pm.expect(pm.response.code).to.not.equal(500);\n});",
+              "pm.test(\"Status is 200 or 422\", function () {\n  pm.expect([200,422]).to.include(pm.response.code);\n});",
+              "pm.test(\"Response shape check\", function () {\n  var code = pm.response.code;\n  if (code === 200) {\n    var json = pm.response.json();\n    pm.expect(json).to.have.property('recommendations');\n    pm.expect(json).to.have.property('analytics');\n  } else if (code === 422) {\n    var json = pm.response.json();\n    pm.expect(json).to.have.property('detail');\n  }\n});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
